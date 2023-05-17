@@ -11,9 +11,9 @@ export const Button: FC<IButtonProps> = ({
   if (href) {
     return (
       <Link href={href}>
-        <button {...props}>{loading ? loading : children}</button>
+        <button {...props}>{loading ? "Memuat..." : children}</button>
       </Link>
     );
   }
-  return <button {...props}>{loading ? loading : children}</button>;
+  return <button {...props}>{loading ? "Memuat..." : children}</button>;
 };
