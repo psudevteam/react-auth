@@ -1,24 +1,45 @@
-import { lazy } from "react";
+import { lazy, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 const ContentLayout = lazy(() => import("../../layouts/ContentLayout"));
 
 const Register = () => {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      nama: "",
+      name: "",
       email: "",
       password: "",
     },
     mode: "onBlur",
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data, e) => {
+    setIsLoading(true);
+    try {
+      const response = await axios.post(
+        "https://go-sample-backend-production.up.railway.app/api/register",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      console.log(response);
+      setIsLoading(false);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -31,17 +52,17 @@ const Register = () => {
         >
           {/* NAMA */}
           <div className="flex flex-col font-semibold">
-            <label htmlFor="nama">Nama</label>
+            <label htmlFor="name">Nama</label>
             <input
-              type="nama"
-              id="nama"
+              type="name"
+              id="name"
               placeholder="masukan nama"
               className={`border-2 w-[60vw] md:w-[35vw] lg:w-[30vw] p-2 rounded-sm hover:border-black ${
-                errors.nama
+                errors.name
                   ? "border-red-600 bg-red-200 hover:border-red-400"
                   : " border-slate-500"
               }`}
-              {...register("nama", {
+              {...register("name", {
                 required: "nama harus diisi ",
                 pattern: {
                   value: /^[A-Za-z\s]+$/i,
@@ -49,9 +70,9 @@ const Register = () => {
                 },
               })}
             />
-            {errors.nama && (
+            {errors.name && (
               <span className="animate-pulse text-red-600">
-                {errors.nama.message}
+                {errors.name.message}
               </span>
             )}
           </div>
@@ -111,10 +132,16 @@ const Register = () => {
           </div>
 
           <button
-            className="text-[17px] font-semibold rounded-2xl bg-blue-400 hover:bg-blue-500 hover:text-slate-100 
-          h-[6vh] w-[18vw] md:w-[13vw] lg:w-[10vw] mt-5 mx-auto"
+            type="submit"
+            disabled={isLoading}
+            className={`text-[17px] font-semibold rounded-2xl bg-blue-400  
+              h-[6vh] w-[18vw] md:w-[13vw] lg:w-[10vw] mt-5 mx-auto ${
+                isLoading
+                  ? "cursor-not-allowed bg-blue-200 text-slate-500"
+                  : "hover:bg-blue-500 hover:text-slate-100 "
+              } `}
           >
-            Register
+            {isLoading ? "Loading..." : "Register"}
           </button>
         </form>
 

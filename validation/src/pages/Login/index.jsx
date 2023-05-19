@@ -1,9 +1,13 @@
-import { lazy } from "react";
+import { lazy, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 const ContentLayout = lazy(() => import("../../layouts/ContentLayout"));
 
 const Login = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -16,8 +20,25 @@ const Login = () => {
     mode: "onBlur",
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    setIsLoading(true);
+    try {
+      const response = await axios.post(
+        "https://go-sample-backend-production.up.railway.app/api/login",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      console.log(response);
+      setIsLoading(false);
+      navigate("/user");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -83,10 +104,16 @@ const Login = () => {
           </div>
 
           <button
-            className="text-[17px] font-semibold rounded-2xl bg-green-400 hover:bg-green-500 hover:text-slate-100 
-          h-[6vh] w-[18vw] md:w-[14vw] lg:w-[10vw] mt-5 mx-auto"
+            type="submit"
+            disabled={isLoading}
+            className={`text-[17px] font-semibold rounded-2xl bg-green-400  
+            h-[6vh] w-[18vw] md:w-[14vw] lg:w-[10vw] mt-5 mx-auto ${
+              isLoading
+                ? "cursor-not-allowed bg-green-200 text-slate-500"
+                : "hover:bg-green-500 hover:text-slate-100"
+            } `}
           >
-            Login
+            {isLoading ? "Loading..." : "Login"}
           </button>
         </form>
 

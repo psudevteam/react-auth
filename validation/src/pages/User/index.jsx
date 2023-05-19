@@ -1,21 +1,48 @@
-import { lazy, useEffect } from "react";
+import { lazy, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 const ContentLayout = lazy(() => import("../../layouts/ContentLayout"));
 
 const User = () => {
   useEffect(() => {
-    user;
+    // const token = localStorage.getItem("token");
+    // console.log(token);
+    // setAuthToken(token);
+    getUser();
   }, []);
 
-  const user = {
-    nama: "Rian",
+  // const setAuthToken = (token) => {
+  //   if (token) {
+  //     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  //   } else {
+  //     delete axios.defaults.headers.common["Authorization"];
+  //   }
+  // };
+
+  const [name, setName] = useState("");
+
+  const getUser = async () => {
+    try {
+      const response = await axios.get(
+        "https://go-sample-backend-production.up.railway.app/api/user",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      console.log(response.user);
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
   };
 
   return (
     <ContentLayout>
       <div className="flex flex-col items-center justify-center shadow-lg p-5 bg-indigo-600 rounded-lg text-slate-100">
         <span className="text-[25px] font-bold">
-          Hello Lord <i>{user.nama}</i>
+          Hello Lord <i>{}</i>
         </span>
         <span className="text-[20px] font-bold">
           Selamat kamu telah melewati kasta sepuh
