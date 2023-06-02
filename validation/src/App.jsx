@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-const Router = lazy(() => import("./router/Router"));
+const Router = lazy(() => import("./router"));
 const Loading = lazy(() => import("./components/Loading"));
 const Error = lazy(() => import("./components/Error"));
 

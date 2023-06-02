@@ -25,13 +25,12 @@ const Register = () => {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        "https://go-sample-backend-production.up.railway.app/api/register",
+        "https://goauthjwt-production.up.railway.app/api/register",
         data,
         {
           headers: {
             "Content-Type": "application/json",
           },
-          withCredentials: true,
         }
       );
       console.log(response);

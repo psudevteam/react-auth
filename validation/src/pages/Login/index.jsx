@@ -1,7 +1,7 @@
 import { lazy, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { login } from "../../api";
 const ContentLayout = lazy(() => import("../../layouts/ContentLayout"));
 
 const Login = () => {
@@ -23,17 +23,7 @@ const Login = () => {
   const onSubmit = async (data) => {
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        "https://go-sample-backend-production.up.railway.app/api/login",
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-      console.log(response);
+      await login(data);
       setIsLoading(false);
       navigate("/user");
     } catch (error) {
